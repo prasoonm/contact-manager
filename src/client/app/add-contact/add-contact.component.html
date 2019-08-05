@@ -1,0 +1,43 @@
+<div class="app-add-contact-container">
+  <div class="alert alert-info alert-dismissible fade show" role="alert" *ngIf="newContact">
+    <div>New Contact added! Name:&nbsp;{{newContact.name}}</div>
+    <button type="submit" class="close" data-dismiss="alert" (click)="newContact = null">
+        <span>&times;</span>
+    </button>
+  </div>
+  <form #contactForm="ngForm" (submit)="onSubmit(contactForm)" [class.loading]="loading">
+    <div class="form-row">
+      <div class="form-group col-6">
+        <label>First name</label>
+        <input type="text" class="form-control" name="firstname" placeholder="First name" ngModel>
+      </div>
+      <div class="form-group col-6">
+        <label>Last name</label>
+        <input type="text" class="form-control" name="lastname" placeholder="Last name" ngModel>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Address</label>
+      <input type="text" class="form-control" name="address" placeholder="Address" ngModel>
+    </div>
+    <div class="form-row">
+      <div class="form-group col-4">
+        <label>Phone</label>
+        <input type="text" class="form-control" name="areacode" placeholder="### - Area code" ngModel>
+      </div>
+      <div class="form-group col-4">
+        <label>&nbsp;</label>
+        <input type="text" class="form-control" name="prefix" placeholder="### - Prefix" ngModel>
+      </div>
+      <div class="form-group col-4">
+        <label>&nbsp;</label>
+        <input type="text" class="form-control" name="linenumber" placeholder="### - Line number" ngModel>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Photo URL</label>
+      <input type="text" class="form-control" name="photourl" placeholder="Photo URL" ngModel>
+    </div>
+    <button type="submit" class="btn btn-info float-right">Submit</button>
+  </form>
+</div>
