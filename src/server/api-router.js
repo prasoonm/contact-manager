@@ -1,4 +1,6 @@
 const express = require('express');
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
 
 function apiRouter(database) {
     const router = express.Router();
@@ -21,6 +23,33 @@ function apiRouter(database) {
     
             const newRecord = r.ops[0];
             return response.status(201).json(newRecord);
+        });
+    });
+
+    router.post('/authenticate', (request, response) => {
+        const user = request.body;
+        const userCollection = database.collection('users');
+
+        userCollection.findOne({ username: user.username}, (err, result) => {
+            if(!result) {
+                return response.status(404).json({ error: 'User not found'});
+            }
+
+            if( !bcrypt.compareSync(user.password, result.password)) {
+                return response.status(401).json({ error: 'Incorrect password'});
+            }
+
+            const payload = {
+                username: result.username,
+                admin: result.admin
+            };
+
+            const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '4h' });
+
+            return response.json({
+                message: 'Successfully authenticated',
+                token: token
+            });
         });
     });
 
