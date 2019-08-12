@@ -1,9 +1,20 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
+const checkJWT = require('express-jwt');
 
 function apiRouter(database) {
     const router = express.Router();
+
+    router.use(
+        checkJWT( {secret: process.env.JWT_SECRET}).unless({ path: '/api/authenticate' })
+    );
+
+    router.use((error, request, response, next) => {
+        if(error.name === 'UnauthorizedError') {
+            response.status(401).send({error: error.message}); 
+        }
+    })
 
     router.get('/contacts', (request, response) => {
         const contactsCollection = database.collection('contacts');
